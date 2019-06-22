@@ -1,4 +1,4 @@
-pragma solidity >=0.4.21 <0.6.0;
+pragma solidity >=0.4.8;
 
 contract OreOreCoin {
     // 상태 변수 선언
@@ -8,6 +8,7 @@ contract OreOreCoin {
     uint256 public totalSupply; // 토큰 총량
     mapping (address => uint256) public balanceOf; // 각 주소의 잔고
     mapping (address => int8) public blackList; // 블랙 리스트
+    mapping (address => int8) public cashbackRate; // 각 주소의 캐시백 비율
     address public owner; // 소유자 주소
 
     // 수식자
@@ -19,6 +20,8 @@ contract OreOreCoin {
     event DeleteFromBlacklist(address indexed target);
     event RejectedPaymentToBlacklistedAddr(address indexed from, address indexed to, uint256 value);
     event RejectedPaymentFromBlacklistedAddr(address indexed from, address indexed to, uint256 value);
+    event SetCashback(address indexed addr, int8 rate);
+    event Cashback(address indexed from, address indexed to, uint256 value);
 
     // 생성자
     constructor(uint256 _supply, string memory _name, string memory _symbol, uint8 _decimals) public{
@@ -42,6 +45,25 @@ contract OreOreCoin {
         emit DeleteFromBlacklist(_addr);
     }
 
+    // 캐시백 비율 설정
+    function setCashbackRate(int8 _rate) public {
+        int8 rate = _rate;
+
+        if(rate < 1) {
+            rate = -1;
+        }else if(rate > 100) {
+            rate = 100;
+        }
+
+        cashbackRate[msg.sender] = rate;
+
+        if(rate < 1) {
+            rate = 0;
+        }
+
+        emit SetCashback(msg.sender, rate);
+    }
+
     // 송금
     function transfer(address _to, uint256 _value) public {
         // 부정 송금 확인
@@ -54,13 +76,17 @@ contract OreOreCoin {
         } else if (blackList[_to] > 0) {
             emit RejectedPaymentToBlacklistedAddr(msg.sender, _to, _value);
         } else {
+            //캐시백 금액 계산 (각 대상의 캐시백 비율을 사용)
+            uint256 cashback = 0;
+            if(cashbackRate[_to] > 0) cashback = _value / 100 * uint256(cashbackRate[_to]);
+
             // 송금하는 주소와 송금받는 주소의 잔고 갱신
-            balanceOf[msg.sender] -= _value;
-            balanceOf[_to] += _value;
-                        
+            balanceOf[msg.sender] -= (_value - cashback);
+            balanceOf[_to] += (_value - cashback);
+
             // 이벤트 알림
             emit Transfer(msg.sender, _to, _value);
-
+            emit Cashback(_to, msg.sender, cashback);
         }
     }
 }
