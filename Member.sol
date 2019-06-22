@@ -97,6 +97,7 @@ contract Members is Owned {
     }
 }
 
+// 회원 관리 기능이 구현된 가상 화폐
 contract OreOreCoin is Owned{
     // 상태 변수 선언
     string public name; // 토큰 이름
