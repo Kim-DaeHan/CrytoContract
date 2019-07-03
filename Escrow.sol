@@ -309,7 +309,7 @@ contract Crowdsale is Owned {
         if (isOpened) return;
         // 이미 인출된 경우 예외 처리
         if (fundersProperty[msg.sender].withdrawed) revert("이미 인출됨");
-        // 목표 달성: 토큰, 목표 미달: Ether
+        // 목표 달성: 토큰, 목표 미달: Ether 
         if (fundingGoalReached) {
             if (fundersProperty[msg.sender].reservedToken > 0) {
                 tokenReward.transfer(msg.sender, fundersProperty[msg.sender].reservedToken);
