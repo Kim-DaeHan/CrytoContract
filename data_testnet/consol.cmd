@@ -1,0 +1,1 @@
+geth --networkid 4386 --nodiscover --maxpeers 0 --datadir ./ console 2>> ./geth.log
