@@ -2,7 +2,7 @@ pragma solidity >=0.4.8;
 
 // 거래 로그 계약 선언(버그가 있는 계약 코드)
 contract TransactionLogNG {
-    // 저장소 정의
+    // 저장소 정의 
     mapping (bytes32 => mapping (bytes32 => string)) public tranlog;
 
     // 거래 내용 등록
