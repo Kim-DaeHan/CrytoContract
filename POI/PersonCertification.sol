@@ -54,7 +54,7 @@ contract PersonCertification {
         orgDetail[msg.sender].name = _name;
     }
 
-    // 조직이 개인의 소속을 증명
+    // 조직이 개인의 소속을 증명 
     function setBelong(address _person) public {
         personDetail[_person].orglist.push(msg.sender);
     }
