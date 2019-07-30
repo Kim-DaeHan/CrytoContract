@@ -41,7 +41,7 @@ contract PersonCertification {
     }
 
     //----------------------------------------------------------
-    // 데이터 등록 기관(set)
+    // 데이터 등록 기관(set) 
     //----------------------------------------------------------
     // 본인 정보를 등록
     function setPerson(string memory _name, string memory _birth) public {
