@@ -1,5 +1,6 @@
 pragma solidity >=0.4.8;
 
+
 // 본인 확인 계약
 contract PersonCertification {
     
